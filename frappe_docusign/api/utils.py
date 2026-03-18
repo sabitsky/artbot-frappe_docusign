@@ -6,22 +6,9 @@ import frappe
 
 def update_deal_stage(deal_name: str, stage_name: str) -> None:
     """
-    Update the CRM Deal pipeline stage.
+    Update the CRM Deal status (pipeline stage).
 
-    Checks actual fieldnames at runtime because different versions of Frappe CRM
-    may use 'pipeline_stage' or 'stage'. If neither is found, logs a warning.
+    Frappe CRM v2 uses the field 'status' (Link → CRM Deal Status).
+    The stage_name must match the name of an existing CRM Deal Status record.
     """
-    meta = frappe.get_meta("CRM Deal")
-    available = {f.fieldname for f in meta.fields}
-
-    if "pipeline_stage" in available:
-        frappe.db.set_value("CRM Deal", deal_name, "pipeline_stage", stage_name)
-    elif "stage" in available:
-        frappe.db.set_value("CRM Deal", deal_name, "stage", stage_name)
-    else:
-        frappe.log_error(
-            f"Cannot update CRM Deal '{deal_name}' stage to '{stage_name}': "
-            "neither 'pipeline_stage' nor 'stage' field exists on CRM Deal. "
-            "Update frappe_docusign to use the correct field name from the diagnostic endpoint.",
-            "frappe_docusign: Stage Update Warning",
-        )
+    frappe.db.set_value("CRM Deal", deal_name, "status", stage_name)

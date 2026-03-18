@@ -5,11 +5,16 @@
  *   1. Frappe Desk  — via doctype_js in hooks.py
  *   2. Frappe CRM   — via CRM Form Script record created by after_install / after_migrate
  *
- * Field names are detected at runtime to support different Frappe CRM versions.
- * Stage candidates : pipeline_stage, stage
+ * Frappe CRM v2: deal status field is 'status' (Link → CRM Deal Status).
+ * Button appears when status === SEND_TRIGGER_STATUS and no envelope exists yet.
+ *
  * Email candidates : email, contact_email, customer_email
  * Name candidates  : lead_name, contact_name, customer_name
  */
+
+// Stage at which the "Send for Signing" button appears.
+// Matches the default Frappe CRM v2 status name "Proposal/Quotation".
+var SEND_TRIGGER_STATUS = "Proposal/Quotation";
 
 frappe.ui.form.on("CRM Deal", {
 	refresh(frm) {
@@ -18,13 +23,12 @@ frappe.ui.form.on("CRM Deal", {
 });
 
 function _addDocuSignButtons(frm) {
-	const stageField = _detectField(frm, ["pipeline_stage", "stage"]);
-	const currentStage = frm.doc[stageField];
-	const hasEnvelope = Boolean(frm.doc.docusign_envelope_id);
-	const terminalStatuses = ["Completed", "Declined", "Voided"];
+	var currentStage = frm.doc.status;
+	var hasEnvelope = Boolean(frm.doc.docusign_envelope_id);
+	var terminalStatuses = ["Completed", "Declined", "Voided"];
 
-	// "Send for Signing" — only on Proposal Sent stage and before any envelope is created
-	if (currentStage === "Proposal Sent" && !hasEnvelope) {
+	// "Send for Signing" — only on Proposal/Quotation stage and before any envelope is created
+	if (currentStage === SEND_TRIGGER_STATUS && !hasEnvelope) {
 		frm.add_custom_button(
 			__("Send for Signing"),
 			function () {

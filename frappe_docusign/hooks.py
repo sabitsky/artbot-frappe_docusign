@@ -19,11 +19,25 @@ doctype_js = {
     "CRM Deal": "public/js/crm_deal_docusign.js",
 }
 
+# Automatically triggers DocuSign envelope when CRM Deal status → "Contract Sent".
+# Uses validate hook so a failed send rolls back the status change.
+doc_events = {
+    "CRM Deal": {
+        "validate": "frappe_docusign.api.crm_deal_hooks.on_deal_status_change",
+    }
+}
+
 # Export custom fields on CRM Deal so they are applied automatically
 # when the app is installed on any new site.
 fixtures = [
+    # DocuSign tracking fields (docusign_section, docusign_envelope_id, etc.)
     {
         "dt": "Custom Field",
         "filters": [["name", "like", "CRM Deal-docusign_%"]],
-    }
+    },
+    # Service fields used to determine DocuSign template and language
+    {
+        "dt": "Custom Field",
+        "filters": [["name", "in", ["CRM Deal-service_type", "CRM Deal-preferred_language"]]],
+    },
 ]

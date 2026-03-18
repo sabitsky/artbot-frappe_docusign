@@ -1,12 +1,34 @@
 [
   {
     "doctype": "Custom Field",
+    "name": "CRM Deal-service_type",
+    "dt": "CRM Deal",
+    "fieldname": "service_type",
+    "fieldtype": "Select",
+    "label": "Service Type",
+    "options": "Immigration\nTax Consulting\nSworn Translation\nInsurance",
+    "insert_after": "",
+    "module": "Frappe Docusign"
+  },
+  {
+    "doctype": "Custom Field",
+    "name": "CRM Deal-preferred_language",
+    "dt": "CRM Deal",
+    "fieldname": "preferred_language",
+    "fieldtype": "Select",
+    "label": "Preferred Language",
+    "options": "EN\nES",
+    "insert_after": "service_type",
+    "module": "Frappe Docusign"
+  },
+  {
+    "doctype": "Custom Field",
     "name": "CRM Deal-docusign_section",
     "dt": "CRM Deal",
     "fieldname": "docusign_section",
     "fieldtype": "Section Break",
     "label": "DocuSign",
-    "insert_after": "",
+    "insert_after": "preferred_language",
     "collapsible": 1,
     "module": "Frappe Docusign"
   },

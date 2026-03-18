@@ -13,8 +13,9 @@
  */
 
 // Stage at which the "Send for Signing" button appears.
-// Matches the default Frappe CRM v2 status name "Proposal/Quotation".
-var SEND_TRIGGER_STATUS = "Proposal/Quotation";
+// ArtBot pipeline: button shows on "New" — ops fills service_type + preferred_language,
+// then sends the contract manually via this button.
+var SEND_TRIGGER_STATUS = "New";
 
 frappe.ui.form.on("CRM Deal", {
 	refresh(frm) {

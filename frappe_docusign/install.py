@@ -8,13 +8,23 @@ import os
 
 import frappe
 
-# Frappe CRM v2 uses CRM Deal Status (not CRM Stage).
-# Default statuses (Qualification, Demo/Making, Proposal/Quotation, etc.)
-# are created by Frappe CRM itself. We only add the two statuses that our
-# DocuSign integration sets and that do not exist in the CRM defaults.
+# ---------------------------------------------------------------------------
+# ArtBot Deal Status pipeline (Frappe CRM v2 uses CRM Deal Status, not CRM Stage)
+#
+# These statuses are created automatically on install.
+# Frappe CRM defaults (Qualification, Demo/Making, Proposal/Quotation,
+# Negotiation, Ready to Close) must be deleted MANUALLY via the UI after
+# install — see ADMIN_INSTALL_GUIDE.md § "Deal Statuses".
+# Won and Lost (Frappe CRM defaults) are kept as-is.
+# ---------------------------------------------------------------------------
 OUR_DEAL_STATUSES = [
-    {"deal_status": "Contract Sent",   "type": "Ongoing", "probability": 80},
-    {"deal_status": "Contract Signed", "type": "Won",     "probability": 95},
+    # position 1-5: our pipeline (inserted before Won/Lost which sit at 6-7)
+    {"deal_status": "New",              "type": "Open",    "probability": 10,  "color": "gray",   "position": 1},
+    {"deal_status": "Contract Sent",    "type": "Ongoing", "probability": 50,  "color": "orange", "position": 2},
+    {"deal_status": "Contract Signed",  "type": "Ongoing", "probability": 80,  "color": "blue",   "position": 3},
+    {"deal_status": "Invoice Sent",     "type": "Ongoing", "probability": 90,  "color": "yellow", "position": 4},
+    {"deal_status": "In Progress",      "type": "Ongoing", "probability": 95,  "color": "purple", "position": 5},
+    # Won (pos 6) and Lost (pos 7) already exist as Frappe CRM defaults — skip.
 ]
 
 _FORM_SCRIPT_NAME = "DocuSign Buttons - CRM Deal"
@@ -25,9 +35,8 @@ def after_install():
     if not frappe.db.exists("DocType", "CRM Deal Status"):
         frappe.log_error(
             "Frappe CRM is not installed or CRM Deal Status DocType is missing. "
-            "DocuSign statuses (Contract Sent, Contract Signed) were NOT created. "
-            "Install Frappe CRM v2 first, then create them manually via "
-            "/app/crm-deal-status",
+            "Deal statuses were NOT created. Install Frappe CRM v2 first, "
+            "then create them manually via https://{site}/app/crm-deal-status",
             "frappe_docusign: Install Warning",
         )
     else:
@@ -50,19 +59,16 @@ def after_migrate():
 
 def _create_crm_deal_statuses():
     """
-    Create the two CRM Deal Status records used by the DocuSign integration.
-    Frappe CRM's own installer already creates the default statuses
-    (Qualification, Demo/Making, Proposal/Quotation, etc.).
-    We only add Contract Sent and Contract Signed.
+    Create ArtBot pipeline statuses. Skips any that already exist.
+    Sets explicit positions 1-5 so our statuses appear before Won/Lost (6-7).
+
+    After install, the admin must manually DELETE the Frappe CRM defaults:
+        Qualification, Demo/Making, Proposal/Quotation, Negotiation, Ready to Close
+    See ADMIN_INSTALL_GUIDE.md for step-by-step instructions.
     """
     created, skipped = [], []
 
-    # Find the highest existing position so we append after the defaults.
-    max_pos = frappe.db.sql(
-        "SELECT COALESCE(MAX(position), 5) FROM `tabCRM Deal Status`"
-    )[0][0]
-
-    for i, entry in enumerate(OUR_DEAL_STATUSES, start=1):
+    for entry in OUR_DEAL_STATUSES:
         status_name = entry["deal_status"]
         if frappe.db.exists("CRM Deal Status", {"deal_status": status_name}):
             skipped.append(status_name)
@@ -72,7 +78,8 @@ def _create_crm_deal_statuses():
             doc.deal_status = status_name
             doc.type = entry["type"]
             doc.probability = entry["probability"]
-            doc.position = max_pos + i
+            doc.color = entry["color"]
+            doc.position = entry["position"]
             doc.insert(ignore_permissions=True, ignore_if_duplicate=True)
             created.append(status_name)
         except Exception as exc:

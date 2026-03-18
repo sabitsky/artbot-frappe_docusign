@@ -1,0 +1,1 @@
+recursive-include frappe_docusign *.json *.js *.css *.html *.txt *.md

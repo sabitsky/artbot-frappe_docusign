@@ -1,0 +1,74 @@
+[
+  {
+    "doctype": "Custom Field",
+    "dt": "CRM Deal",
+    "fieldname": "docusign_section",
+    "fieldtype": "Section Break",
+    "label": "DocuSign",
+    "insert_after": "",
+    "collapsible": 1,
+    "module": "Frappe Docusign"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "CRM Deal",
+    "fieldname": "docusign_envelope_id",
+    "fieldtype": "Data",
+    "label": "DocuSign Envelope ID",
+    "insert_after": "docusign_section",
+    "read_only": 1,
+    "module": "Frappe Docusign"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "CRM Deal",
+    "fieldname": "docusign_status",
+    "fieldtype": "Select",
+    "label": "DocuSign Status",
+    "insert_after": "docusign_envelope_id",
+    "options": "Sent\nDelivered\nCompleted\nDeclined\nVoided",
+    "read_only": 1,
+    "module": "Frappe Docusign"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "CRM Deal",
+    "fieldname": "docusign_sent_at",
+    "fieldtype": "Datetime",
+    "label": "DocuSign Sent At",
+    "insert_after": "docusign_status",
+    "read_only": 1,
+    "module": "Frappe Docusign"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "CRM Deal",
+    "fieldname": "docusign_completed_at",
+    "fieldtype": "Datetime",
+    "label": "DocuSign Completed At",
+    "insert_after": "docusign_sent_at",
+    "read_only": 1,
+    "module": "Frappe Docusign"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "CRM Deal",
+    "fieldname": "docusign_link",
+    "fieldtype": "Data",
+    "label": "DocuSign Envelope Link",
+    "insert_after": "docusign_completed_at",
+    "read_only": 1,
+    "options": "URL",
+    "module": "Frappe Docusign"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "CRM Deal",
+    "fieldname": "docusign_error",
+    "fieldtype": "Small Text",
+    "label": "DocuSign Last Error",
+    "insert_after": "docusign_link",
+    "read_only": 1,
+    "module": "Frappe Docusign"
+  }
+]

@@ -1,0 +1,29 @@
+app_name = "frappe_docusign"
+app_title = "Frappe DocuSign"
+app_publisher = "ArtBot"
+app_description = "DocuSign eSignature integration for Frappe CRM"
+app_email = ""
+app_license = "MIT"
+app_version = "0.1.0"
+
+after_install = "frappe_docusign.install.after_install"
+
+# Runs after every `bench migrate` — keeps the CRM Form Script in sync
+# with the JS file in the repository after a git pull.
+after_migrate = ["frappe_docusign.install.after_migrate"]
+
+# Frappe Desk fallback: loads the same JS when CRM Deal is opened via /app/crm-deal
+# In Frappe CRM (Vue UI), the script is loaded via the CRM Form Script record
+# created by after_install / after_migrate.
+doctype_js = {
+    "CRM Deal": "public/js/crm_deal_docusign.js",
+}
+
+# Export custom fields on CRM Deal so they are applied automatically
+# when the app is installed on any new site.
+fixtures = [
+    {
+        "dt": "Custom Field",
+        "filters": [["name", "like", "CRM Deal-docusign_%"]],
+    }
+]

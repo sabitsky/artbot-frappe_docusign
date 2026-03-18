@@ -1,6 +1,7 @@
 [
   {
     "doctype": "Custom Field",
+    "name": "CRM Deal-docusign_section",
     "dt": "CRM Deal",
     "fieldname": "docusign_section",
     "fieldtype": "Section Break",
@@ -11,6 +12,7 @@
   },
   {
     "doctype": "Custom Field",
+    "name": "CRM Deal-docusign_envelope_id",
     "dt": "CRM Deal",
     "fieldname": "docusign_envelope_id",
     "fieldtype": "Data",
@@ -21,6 +23,7 @@
   },
   {
     "doctype": "Custom Field",
+    "name": "CRM Deal-docusign_status",
     "dt": "CRM Deal",
     "fieldname": "docusign_status",
     "fieldtype": "Select",
@@ -32,6 +35,7 @@
   },
   {
     "doctype": "Custom Field",
+    "name": "CRM Deal-docusign_sent_at",
     "dt": "CRM Deal",
     "fieldname": "docusign_sent_at",
     "fieldtype": "Datetime",
@@ -42,6 +46,7 @@
   },
   {
     "doctype": "Custom Field",
+    "name": "CRM Deal-docusign_completed_at",
     "dt": "CRM Deal",
     "fieldname": "docusign_completed_at",
     "fieldtype": "Datetime",
@@ -52,6 +57,7 @@
   },
   {
     "doctype": "Custom Field",
+    "name": "CRM Deal-docusign_link",
     "dt": "CRM Deal",
     "fieldname": "docusign_link",
     "fieldtype": "Data",
@@ -63,6 +69,7 @@
   },
   {
     "doctype": "Custom Field",
+    "name": "CRM Deal-docusign_error",
     "dt": "CRM Deal",
     "fieldname": "docusign_error",
     "fieldtype": "Small Text",
